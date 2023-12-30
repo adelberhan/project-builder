@@ -10,3 +10,10 @@ export interface IProduct {
     avatar: string;
   };
 }
+
+export interface IFormInput{
+  id:string,
+  name:'title'| 'description'| 'image'| 'price'
+  label: string
+  type: string
+}
