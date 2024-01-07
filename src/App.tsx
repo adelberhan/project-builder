@@ -1,18 +1,22 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import ProductCard from "./components/ProductCard";
 import Modal from "./components/ui/Model";
-import { PRODUCTS, fromInputsList } from "./data";
+import { CATEGORIES, PRODUCTS, fromInputsList } from "./data";
 import Button from "./components/ui/Button";
 import Input from "./components/ui/Input";
-import { IProduct } from "./interface/imdex";
+import { IProduct, colors } from "./interface/imdex";
 import { productValidation } from "./validation/productValidation";
 import ErrorMsg from "./components/ErrorMsg";
+import CircleColors from "./components/CircleColors";
+import { v4 as uuid } from "uuid";
+import Select from "./components/Select";
+import { productNameType } from "./types/types";
 
 const App = () => {
   const defaultProduct = {
     category: {
       name: "",
-      avatar: "",
+      image: "",
     },
     colors: [],
     image: "",
@@ -20,6 +24,25 @@ const App = () => {
     title: "",
     description: "",
   };
+
+  /* State */
+  const [products, setProducts] = useState<IProduct[]>(PRODUCTS);
+  const [product, setProduct] = useState<IProduct>(defaultProduct);
+  const [editProduct, setEditProduct] = useState<IProduct>(defaultProduct);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenEditMode, setIsOpenEditMode] = useState(false);
+  const [ProductToEditIndex, setProductToEditIndex] = useState<number>(0);
+  const [selectedCategory, setSelected] = useState(CATEGORIES[0]);
+  const [tempColors, setTempColors] = useState<string[]>([]);
+
+  const [errors, setErrors] = useState({
+    title: "",
+    description: "",
+    image: "",
+    price: "",
+  });
+  ///////////////////////////
+
   /* Handlers */
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
@@ -33,26 +56,34 @@ const App = () => {
       [name]: "",
     });
   };
+  const onChangeEditHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
 
-  /* State */
-  const [isOpen, setIsOpen] = useState(true);
-  const [errors, setErrors] = useState({
-    title: "",
-    description: "",
-    image: "",
-    price: "",
-  });
-  console.log(errors);
-
-  const onCancel = () => {
-    setProduct(defaultProduct);
-    closeModal;
+    setEditProduct({
+      ...editProduct,
+      [name]: value,
+    });
+    setErrors({
+      ...errors,
+      [name]: "",
+    });
   };
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>): void => {
+  // const submitHandler = (e: FormEvent<HTMLFormElement>): void => {
+  //   e.preventDefault();
+  //   /* Error Handler */
+  //   const { description, image, price, title } = product;
+  //   const errors = productValidation({
+  //     title,
+  //     description,
+  //     image,
+  //     price,
+  //   });
+
+  const submitEditHandler = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     /* Error Handler */
-    const { description, image, price, title } = product;
+    const { description, image, price, title } = editProduct;
     const errors = productValidation({
       title,
       description,
@@ -73,21 +104,68 @@ const App = () => {
       return;
     }
     console.log("Success");
+    setProducts((prev) => [...prev, { ...product, colors: tempColors, category: selectedCategory, id: uuid() }]);
+    setTempColors([]);
+   
+
+
+    const updateProducts=[...products];
+    updateProducts[ProductToEditIndex]=editProduct
+    setProducts(updateProducts)
+    closeEditModal();
+    setProduct(defaultProduct);
   };
 
-  const [product, setProduct] = useState<IProduct>(defaultProduct);
+  /////////////////////////////////////////////////////////
 
   /* Functions */
-  function closeModal() {
+  const closeModal = () => {
     setIsOpen(false);
-  }
+  };
 
-  function openModal() {
+  const openModal = () => {
     setIsOpen(true);
-  }
+  };
+
+  const closeEditModal = () => {
+    setIsOpenEditMode(false);
+  };
+
+  const openEditModal = () => {
+    setIsOpenEditMode(true);
+  };
+
+  const onCancel = () => {
+    setProduct(defaultProduct);
+    closeModal();
+  };
+  /////////////////////////////////////////////////////////
 
   /* Render */
-  const renderProductList = PRODUCTS.map((product) => <ProductCard key={product.id} product={product} />);
+  const renderProductList = products.map((product) => (
+    <ProductCard
+      key={product.id}
+      product={product}
+      setEditProduct={setEditProduct}
+      openEditProduct={openEditModal}
+      index={ProductToEditIndex}
+      setProductToEditIndex={setProductToEditIndex}
+    />
+  ));
+  const renderProductColors = colors.map((color) => (
+    <CircleColors
+      key={color}
+      color={color}
+      onClick={() => {
+        if (tempColors.includes(color)) {
+          setTempColors((prev) => prev.filter((item) => item !== color));
+          return;
+        }
+        setTempColors((prev) => [...prev, color]);
+      }}
+    />
+  ));
+
   const renderFormInputsList = fromInputsList.map((input) => (
     <div className="flex flex-col mb-3" key={input.id}>
       <label htmlFor={input.id} className="mb-1">
@@ -98,17 +176,80 @@ const App = () => {
     </div>
   ));
 
+  // const renderColors =colors.map(color=>(
+  //   <CircleColors key={color} color={color} onClick={()=>{
+  //     if(tempColors.includes(color)){
+  //       setTempColors(prev=>prev.filter(item=>item!==color))
+  //       return
+  //     }
+  //     setTempColors(prev=>[...prev,color])
+
+  //   }}/>
+  // ))
+
+  const productEditRender = (id: string, label: string, name: productNameType) => {
+    return (
+      <div className="flex flex-col mb-3">
+        <label htmlFor={editProduct[name]} className="mb-1">
+          {label}
+        </label>
+        <Input type="text" name={name} id={id} value={editProduct[name]} onChange={onChangeEditHandler} />
+        <ErrorMsg msg={errors[name]} />
+      </div>
+    );
+  };
+  /////////////////////////////////////////////////////////
+
+  console.log(tempColors);
   return (
     <div>
       <main className="container">
+        <Button
+          className="bg-indigo-700 hover:bg-indigo-400 "
+          onClick={() => {
+            openModal();
+          }}
+        >
+          OPEN
+        </Button>
+
         <div className="m-5 p-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 rounded-md">
           {renderProductList}
         </div>
         <Modal isOpen={isOpen} closeModal={closeModal} title="Add new product">
-          <form className="space-y-3" onSubmit={submitHandler}>
+          <form className="space-y-3" onSubmit={submitEditHandler}>
             {renderFormInputsList}
+            <Select selected={selectedCategory} setSelected={setSelected} />
+            <div className="flex items-center space-x-1">{renderProductColors}</div>
+            <div className="flex items-center flex-wrap space-x-1">
+              {tempColors.map((color) => (
+                <span
+                  key={color}
+                  style={{ backgroundColor: `${color}` }}
+                  className="rounded-md p1 mr-1 mb-1 text-xs text-white"
+                >
+                  {color}
+                </span>
+              ))}
+            </div>
             <div className="flex items-center space-x-3">
               <Button className="bg-indigo-700 hover:bg-indigo-400 ">Add</Button>
+              <Button className="bg-gray-700 hover:bg-gray-400 " onClick={onCancel}>
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </Modal>
+
+        {/* Edit Mode  */}
+        <Modal isOpen={isOpenEditMode} closeModal={closeEditModal} title="Edit product">
+          <form className="space-y-3" onSubmit={submitEditHandler}>
+            {productEditRender("title", "product title", "title")}
+            {productEditRender("image", "product image", "image")}
+            {productEditRender("description", "product description", "description")}
+            {productEditRender("price", "product price", "price")}
+            <div className="flex items-center space-x-3">
+              <Button className="bg-indigo-700 hover:bg-indigo-400 ">Update</Button>
               <Button className="bg-gray-700 hover:bg-gray-400 " onClick={onCancel}>
                 Cancel
               </Button>

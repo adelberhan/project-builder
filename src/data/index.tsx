@@ -1,5 +1,5 @@
-// import {v4 as  uuid} form 'uuid'
-import { IFormInput, IProduct } from "../interface/imdex";
+import { v4 as uuid } from "uuid";
+import { ICategory, IFormInput, IProduct } from "../interface/imdex";
 
 export const PRODUCTS: IProduct[] = [
   {
@@ -10,10 +10,10 @@ export const PRODUCTS: IProduct[] = [
       "https://images.unsplash.com/photo-1583121274602-3e2820c69888?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
     price: "500000",
     colors: ["#FF0032", "#2563eb", "#FF6E31"],
-    id: "OCSgz6FE6hga5D5jjhdie",
+    id: uuid(),
     category: {
       name: "Cars",
-      avatar:
+      image:
         "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
     },
   },
@@ -25,10 +25,10 @@ export const PRODUCTS: IProduct[] = [
       "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
     price: "120000",
     colors: ["#A31ACB", "#3C2A21", "#1F8A70", "#820000", "#FF0032"],
-    id: "xT2XP867NzJdatMT_C2iI",
+    id: uuid(),
     category: {
       name: "Cars",
-      avatar:
+      image:
         "https://images.unsplash.com/photo-1583121274602-3e2820c69888?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
     },
   },
@@ -40,10 +40,10 @@ export const PRODUCTS: IProduct[] = [
       "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80",
     price: "75",
     colors: ["#84D2C5", "#13005A", "#A31ACB", "#1F8A70", "#a855f7", "#2563eb", "#FF0032"],
-    id: "zzrnQ0O_j0BOGnS6qGIt0",
+    id: uuid(),
     category: {
       name: "Clothes",
-      avatar:
+      image:
         "https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80",
     },
   },
@@ -66,10 +66,10 @@ export const PRODUCTS: IProduct[] = [
       "#1F8A70",
       "#84D2C5",
     ],
-    id: "gwZV5rZw0G8cwpL1fHldg",
+    id: uuid(),
     category: {
       name: "Nike",
-      avatar:
+      image:
         "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
     },
   },
@@ -81,16 +81,16 @@ export const PRODUCTS: IProduct[] = [
       "https://images.unsplash.com/photo-1552831388-6a0b3575b32a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80",
     price: "1500",
     colors: [],
-    id: "sz4kfX1kG3izIeUVWZrmY",
+    id: uuid(),
     category: {
       name: "PC Desktop",
-      avatar:
+      image:
         "https://images.unsplash.com/photo-1552831388-6a0b3575b32a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80",
     },
   },
 ];
 
-export const fromInputsList:IFormInput[] = [
+export const fromInputsList: IFormInput[] = [
   {
     id: "title",
     name: "title",
@@ -116,5 +116,49 @@ export const fromInputsList:IFormInput[] = [
     label: "product price",
     type: "text",
   },
-  
+];
+
+export const CATEGORIES: ICategory[] = [
+  {
+    id: uuid(),
+    name: "Nike",
+    image:
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+  },
+  {
+    id: uuid(),
+    name: "T-Shirt",
+    image:
+      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80",
+  },
+  {
+    id: uuid(),
+    name: "Clothes",
+    image:
+      "https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80",
+  },
+  {
+    id: uuid(),
+    name: "PC Desktop",
+    image:
+      "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1142&q=80",
+  },
+  {
+    id: uuid(),
+    name: "Furniture",
+    image:
+      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+  },
+  {
+    id: uuid(),
+    name: "Cars",
+    image:
+      "https://images.unsplash.com/photo-1583121274602-3e2820c69888?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+  },
+  {
+    id: uuid(),
+    name: "Camera",
+    image:
+      "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+  },
 ];
