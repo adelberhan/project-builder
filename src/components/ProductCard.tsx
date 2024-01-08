@@ -17,7 +17,14 @@ interface IProps {
 const ProductCard = ({ product,setEditProduct ,openEditProduct,setProductToEditIndex,openConfirmModal,index}: IProps) => {
   const { title, description, price, image, colors, category } = product;
 
-  const renderProductColors = colors.map((color) => <CircleColors key={color} color={color} />);
+
+/* Renders */
+const renderProductColors = colors.map((color, index) => (
+  <CircleColors
+    key={`${color}-${index}`}
+    color={color}
+  />
+));
 /* Handlers */
 const onEdit = () => {
   setEditProduct(product);
@@ -35,7 +42,7 @@ const onRemove = () => {
     <div className="max-w-sm md:max-w-lg mx-auto md:mx-0 border rounded-md p-2 flex flex-col space-y-3">
       <Image className="rounded-md h-52 w-full lg:object-cover" imageUrl={image} alt="product name" />
       <h3 className="text-lg font-semibold h-[56px] ">{textSlice(title, 25)}</h3>
-      <p className="text-xs text-gray-500 break-words">{textSlice(description)}</p>
+      <p className="text-xs text-gray-500 h-[32px] break-words">{textSlice(description)}</p>
 
       <div className="flex items-center space-x-2 h-[20px]">{renderProductColors}</div>
       <div className="flex items-center justify-between">
