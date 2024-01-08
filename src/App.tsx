@@ -44,7 +44,6 @@ const App = () => {
     image: "",
     price: "",
   });
-  console.log(ProductToEditIndex);
   ///////////////////////////
 
   /* Handlers */
@@ -191,7 +190,6 @@ const App = () => {
         }
         if (editProduct.colors.includes(color)) {
           setTempColors((prev) => prev.filter((item) => item !== color));
-          console.log(editProduct.id);
           return;
         }
         setTempColors((prev) => [...prev, color]);
