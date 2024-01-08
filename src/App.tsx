@@ -32,7 +32,7 @@ const App = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditMode, setIsOpenEditMode] = useState(false);
   const [ProductToEditIndex, setProductToEditIndex] = useState<number>(0);
-  const [selectedCategory, setSelected] = useState(CATEGORIES[0]);
+  const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[0]);
   const [tempColors, setTempColors] = useState<string[]>([]);
 
   const [errors, setErrors] = useState({
@@ -41,6 +41,7 @@ const App = () => {
     image: "",
     price: "",
   });
+  console.log(ProductToEditIndex);
   ///////////////////////////
 
   /* Handlers */
@@ -91,29 +92,26 @@ const App = () => {
       price,
     });
 
-    // Define a constant variable hasErrorMsg to store a boolean value.
-    // The value will be true if any error message is an empty string, otherwise, false.
+    //* Define a constant variable hasErrorMsg to store a boolean value.
+    //* The value will be true if any error message is an empty string, otherwise, false.
     const hasErrorMsg =
       Object.values(errors).some((value) => value === "") &&
-      // Additional condition: Ensure that every error message is an empty string.
-      // This is a stricter check, ensuring that all error messages are empty.
+      //* Additional condition: Ensure that every error message is an empty string.
+      //* This is a stricter check, ensuring that all error messages are empty.
       Object.values(errors).every((value) => value === "");
 
     if (!hasErrorMsg) {
       setErrors(errors);
       return;
     }
-    console.log("Success");
-    setProducts((prev) => [...prev, { ...product, colors: tempColors, category: selectedCategory, id: uuid() }]);
+    // setProducts((prev) => [{ ...prev, ...product, id: uuid(), colors: tempColors, category: selectedCategory }]);
+
+    const updateProducts = [...products];
+
+    updateProducts[ProductToEditIndex] = { ...editProduct, colors: tempColors.concat(editProduct.colors) };
+    setProducts(updateProducts);
     setTempColors([]);
-   
-
-
-    const updateProducts=[...products];
-    updateProducts[ProductToEditIndex]=editProduct
-    setProducts(updateProducts)
     closeEditModal();
-    setProduct(defaultProduct);
   };
 
   /////////////////////////////////////////////////////////
@@ -142,23 +140,28 @@ const App = () => {
   /////////////////////////////////////////////////////////
 
   /* Render */
-  const renderProductList = products.map((product) => (
+  const renderProductList = products.map((product, idx) => (
     <ProductCard
       key={product.id}
       product={product}
       setEditProduct={setEditProduct}
       openEditProduct={openEditModal}
-      index={ProductToEditIndex}
+      index={idx}
       setProductToEditIndex={setProductToEditIndex}
     />
   ));
-  const renderProductColors = colors.map((color) => (
+  const renderProductColors = colors.map((color, index) => (
     <CircleColors
-      key={color}
+      key={`${color}-${index}`}
       color={color}
       onClick={() => {
         if (tempColors.includes(color)) {
           setTempColors((prev) => prev.filter((item) => item !== color));
+          return;
+        }
+        if (editProduct.colors.includes(color)) {
+          setTempColors((prev) => prev.filter((item) => item !== color));
+          console.log(editProduct.id);
           return;
         }
         setTempColors((prev) => [...prev, color]);
@@ -190,7 +193,7 @@ const App = () => {
   const productEditRender = (id: string, label: string, name: productNameType) => {
     return (
       <div className="flex flex-col mb-3">
-        <label htmlFor={editProduct[name]} className="mb-1">
+        <label htmlFor={id} className="mb-1">
           {label}
         </label>
         <Input type="text" name={name} id={id} value={editProduct[name]} onChange={onChangeEditHandler} />
@@ -200,7 +203,6 @@ const App = () => {
   };
   /////////////////////////////////////////////////////////
 
-  console.log(tempColors);
   return (
     <div>
       <main className="container">
@@ -219,7 +221,7 @@ const App = () => {
         <Modal isOpen={isOpen} closeModal={closeModal} title="Add new product">
           <form className="space-y-3" onSubmit={submitEditHandler}>
             {renderFormInputsList}
-            <Select selected={selectedCategory} setSelected={setSelected} />
+            <Select selected={selectedCategory} setSelected={setSelectedCategory} />
             <div className="flex items-center space-x-1">{renderProductColors}</div>
             <div className="flex items-center flex-wrap space-x-1">
               {tempColors.map((color) => (
@@ -248,6 +250,20 @@ const App = () => {
             {productEditRender("image", "product image", "image")}
             {productEditRender("description", "product description", "description")}
             {productEditRender("price", "product price", "price")}
+            <Select selected={editProduct.category} setSelected={value=>{setEditProduct({...editProduct,category:value})}} />
+
+            <div className="flex items-center space-x-1">{renderProductColors}</div>
+            <div className="flex items-center flex-wrap space-x-1">
+              {tempColors.concat(editProduct.colors).map((color) => (
+                <span
+                  key={color}
+                  style={{ backgroundColor: `${color}` }}
+                  className="rounded-md p1 mr-1 mb-1 text-xs text-white"
+                >
+                  {color}
+                </span>
+              ))}
+            </div>
             <div className="flex items-center space-x-3">
               <Button className="bg-indigo-700 hover:bg-indigo-400 ">Update</Button>
               <Button className="bg-gray-700 hover:bg-gray-400 " onClick={onCancel}>

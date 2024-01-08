@@ -8,7 +8,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 interface IProps {
-  selected: ICategory;
+  selected: { name: string; image: string };
   setSelected: (category: ICategory) => void;
 }
 const Select = ({ selected, setSelected }: IProps) => {

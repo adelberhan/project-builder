@@ -7,9 +7,9 @@ import CircleColors from "./CircleColors";
 interface IProps {
   product: IProduct;
   setEditProduct: (product: IProduct) => void;
-  openEditProduct: (value:boolean) => void;
-  setProductToEditIndex:(index:number)=>void
   index:number;
+  openEditProduct: (value:boolean) => void;
+  setProductToEditIndex:(value:number)=>void
 
 }
 
