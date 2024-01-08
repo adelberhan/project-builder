@@ -10,10 +10,11 @@ interface IProps {
   index:number;
   openEditProduct: (value:boolean) => void;
   setProductToEditIndex:(value:number)=>void
+  openConfirmModal: () => void;
 
 }
 
-const ProductCard = ({ product,setEditProduct ,openEditProduct,setProductToEditIndex,index}: IProps) => {
+const ProductCard = ({ product,setEditProduct ,openEditProduct,setProductToEditIndex,openConfirmModal,index}: IProps) => {
   const { title, description, price, image, colors, category } = product;
 
   const renderProductColors = colors.map((color) => <CircleColors key={color} color={color} />);
@@ -25,6 +26,10 @@ const onEdit = () => {
   setProductToEditIndex(index)
 };
 
+const onRemove = () => {
+  setEditProduct(product);
+  openConfirmModal();
+};
 
   return (
     <div className="max-w-sm md:max-w-lg mx-auto md:mx-0 border rounded-md p-2 flex flex-col space-y-3">
@@ -32,7 +37,7 @@ const onEdit = () => {
       <h3 className="text-lg font-semibold h-[56px] ">{textSlice(title, 25)}</h3>
       <p className="text-xs text-gray-500 break-words">{textSlice(description)}</p>
 
-      <div className="flex items-center space-x-2">{renderProductColors}</div>
+      <div className="flex items-center space-x-2 h-[20px]">{renderProductColors}</div>
       <div className="flex items-center justify-between">
         <span className="text-lg text-indigo-600 font-semibold">${price}</span>
 
@@ -42,7 +47,9 @@ const onEdit = () => {
         <Button className="bg-blue-700 " onClick={onEdit}>
           EDIT
         </Button>
-        <Button className="bg-red-700 ">DELETE</Button>
+        <Button className="bg-[#c2344d] hover:bg-red-800" onClick={onRemove}>
+          Remove
+        </Button>
       </div>
     </div>
   );

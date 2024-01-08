@@ -6,9 +6,10 @@ interface IProps {
   closeModal: () => void;
   title?: string;
   children:ReactNode
+  description?: string;
 }
 
-export default function Modal({ isOpen, closeModal, title ,children}: IProps) {
+export default function Modal({ isOpen, closeModal, title ,children,description}: IProps) {
 
 
   return (
@@ -24,7 +25,8 @@ export default function Modal({ isOpen, closeModal, title ,children}: IProps) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black/25" />
+           
+            <div className="fixed inset-0 backdrop-blur-sm" aria-hidden="true" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
@@ -38,6 +40,7 @@ export default function Modal({ isOpen, closeModal, title ,children}: IProps) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
+                
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   {title && (
                     <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
@@ -50,7 +53,7 @@ export default function Modal({ isOpen, closeModal, title ,children}: IProps) {
                       your order. */}
                     </p>
                   </div>
-
+                  {description && <p className="text-sm text-gray-500 mt-3">{description}</p>}
                   <div className="mt-4">
                   {children}
                   </div>
